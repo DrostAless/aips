@@ -1,0 +1,51 @@
+{
+  "aips_version": "0.1",
+  "service": {
+    "id": "dev.example.minimal",
+    "name": "Minimal AIPS Service",
+    "description": "A minimal example service for the Agent Internet Protocol Suite.",
+    "homepage": "https://example.com",
+    "provider": {
+      "name": "Example Developer",
+      "contact": "support@example.com"
+    }
+  },
+  "endpoints": {
+    "task": "https://example.com/aips/task"
+  },
+  "capabilities": [
+    {
+      "name": "echo",
+      "description": "Return the input message.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": ["message"]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "permissions": [],
+      "risk_level": "low",
+      "cost": {
+        "type": "free"
+      }
+    }
+  ],
+  "auth": {
+    "methods": ["none"]
+  },
+  "policy": {
+    "agent_allowed": true,
+    "human_confirmation_required": []
+  }
+}
