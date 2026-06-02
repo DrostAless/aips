@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aips.dev/schemas/manifest.schema.json",
+  "title": "AIPS Manifest",
+  "description": "Draft JSON Schema for Agent Internet Protocol Suite service manifests.",
+  "type": "object",
+  "required": ["aips_version", "service", "endpoints", "capabilities"],
+  "properties": {
+    "aips_version": {
+      "type": "string"
+    },
+    "service": {
+      "type": "object",
+      "required": ["id", "name"],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "homepage": {
+          "type": "string",
+          "format": "uri"
+        },
+        "provider": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "contact": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "endpoints": {
+      "type": "object",
+      "required": ["task"],
+      "properties": {
+        "task": {
+          "type": "string",
+          "format": "uri"
+        },
+        "capabilities": {
+          "type": "string",
+          "format": "uri"
+        },
+        "auth": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "description", "input_schema", "output_schema", "permissions"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "input_schema": {
+            "type": "object"
+          },
+          "output_schema": {
+            "type": "object"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "risk_level": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "critical"]
+          },
+          "rate_limit": {
+            "type": "object"
+          },
+          "cost": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["free", "metered", "subscription", "quota", "negotiated"]
+              },
+              "unit": {
+                "type": "string"
+              },
+              "price": {
+                "type": "number"
+              },
+              "currency": {
+                "type": "string"
+              }
+            }
+          },
+          "confirmation_policy": {
+            "type": "object"
+          },
+          "examples": {
+            "type": "array"
+          }
+        }
+      }
+    },
+    "auth": {
+      "type": "object",
+      "properties": {
+        "methods": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "properties": {
+        "agent_allowed": {
+          "type": "boolean"
+        },
+        "human_confirmation_required": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
