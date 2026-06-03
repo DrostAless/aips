@@ -1,13 +1,17 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://aips.dev/schemas/manifest.schema.json",
-  "title": "AIPS Manifest",
-  "description": "Draft JSON Schema for Agent Internet Protocol Suite service manifests.",
+  "$id": "https://aips.dev/schemas/profile.schema.json",
+  "title": "AIPS Profile",
+  "description": "Draft JSON Schema for an Agent Internet Protocol Suite profile document. This schema describes cross-protocol metadata and does not replace A2A, MCP, AP2, OpenAPI, OAuth, or other protocol-native schemas.",
   "type": "object",
-  "required": ["aips_version", "service", "endpoints", "capabilities"],
+  "required": ["aips_version", "profile_type", "service", "protocols", "capability_profiles"],
   "properties": {
     "aips_version": {
       "type": "string"
+    },
+    "profile_type": {
+      "type": "string",
+      "enum": ["service", "agent", "registry", "local_gateway"]
     },
     "service": {
       "type": "object",
@@ -39,41 +43,60 @@
         }
       }
     },
-    "endpoints": {
-      "type": "object",
-      "required": ["task"],
-      "properties": {
-        "task": {
-          "type": "string",
-          "format": "uri"
-        },
-        "capabilities": {
-          "type": "string",
-          "format": "uri"
-        },
-        "auth": {
-          "type": "string",
-          "format": "uri"
-        }
-      }
-    },
-    "capabilities": {
+    "protocols": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["name", "description", "input_schema", "output_schema", "permissions"],
+        "required": ["protocol"],
         "properties": {
-          "name": {
+          "protocol": {
+            "type": "string",
+            "enum": ["a2a", "mcp", "ap2", "openapi", "http", "custom"]
+          },
+          "version": {
+            "type": "string"
+          },
+          "discovery_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "server_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "transport": {
+            "type": "string"
+          },
+          "auth": {
+            "type": "object"
+          },
+          "metadata": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "capability_profiles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "backing_protocol", "backing_reference", "permissions", "risk_level"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
             "type": "string"
           },
           "description": {
             "type": "string"
           },
-          "input_schema": {
-            "type": "object"
+          "backing_protocol": {
+            "type": "string",
+            "enum": ["a2a", "mcp", "ap2", "openapi", "http", "custom"]
           },
-          "output_schema": {
-            "type": "object"
+          "backing_reference": {
+            "type": "string"
           },
           "permissions": {
             "type": "array",
@@ -85,10 +108,13 @@
             "type": "string",
             "enum": ["low", "medium", "high", "critical"]
           },
-          "rate_limit": {
-            "type": "object"
+          "confirmation_required": {
+            "type": "boolean"
           },
-          "cost": {
+          "audit_required": {
+            "type": "boolean"
+          },
+          "cost_profile": {
             "type": "object",
             "properties": {
               "type": {
@@ -106,22 +132,20 @@
               }
             }
           },
-          "confirmation_policy": {
-            "type": "object"
+          "data_classes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
-          "examples": {
-            "type": "array"
-          }
-        }
-      }
-    },
-    "auth": {
-      "type": "object",
-      "properties": {
-        "methods": {
-          "type": "array",
-          "items": {
+          "user_visible_summary": {
             "type": "string"
+          },
+          "registry_categories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       }
@@ -137,6 +161,30 @@
           "items": {
             "type": "string"
           }
+        },
+        "default_deny_unknown_agents": {
+          "type": "boolean"
+        },
+        "revocation_supported": {
+          "type": "boolean"
+        }
+      }
+    },
+    "audit": {
+      "type": "object",
+      "properties": {
+        "trace_required_for_risk_levels": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "critical"]
+          }
+        },
+        "user_visible_summary_required": {
+          "type": "boolean"
+        },
+        "retention_policy": {
+          "type": "string"
         }
       }
     }
