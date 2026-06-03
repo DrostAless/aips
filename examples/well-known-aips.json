@@ -1,51 +1,67 @@
 {
-  "aips_version": "0.1",
+  "aips_version": "0.2",
+  "profile_type": "service",
   "service": {
     "id": "dev.example.minimal",
-    "name": "Minimal AIPS Service",
-    "description": "A minimal example service for the Agent Internet Protocol Suite.",
+    "name": "Minimal AIPS-Compatible Service",
+    "description": "A minimal example AIPS profile that references protocol-native agent interfaces instead of replacing them.",
     "homepage": "https://example.com",
     "provider": {
       "name": "Example Developer",
       "contact": "support@example.com"
     }
   },
-  "endpoints": {
-    "task": "https://example.com/aips/task"
-  },
-  "capabilities": [
+  "protocols": [
     {
-      "name": "echo",
-      "description": "Return the input message.",
-      "input_schema": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string"
-          }
-        },
-        "required": ["message"]
-      },
-      "output_schema": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string"
-          }
-        }
-      },
+      "protocol": "a2a",
+      "version": "1.0",
+      "discovery_url": "https://example.com/.well-known/agent-card.json"
+    },
+    {
+      "protocol": "mcp",
+      "transport": "streamable_http",
+      "server_url": "https://example.com/mcp"
+    }
+  ],
+  "capability_profiles": [
+    {
+      "id": "echo",
+      "label": "Return the input message.",
+      "backing_protocol": "mcp",
+      "backing_reference": "tool:echo",
       "permissions": [],
       "risk_level": "low",
-      "cost": {
+      "confirmation_required": false,
+      "audit_required": false,
+      "cost_profile": {
+        "type": "free"
+      }
+    },
+    {
+      "id": "research.summarize",
+      "label": "Research and summarize a topic.",
+      "backing_protocol": "a2a",
+      "backing_reference": "skill:research.summarize",
+      "permissions": ["web.search", "content.summarize"],
+      "risk_level": "medium",
+      "confirmation_required": false,
+      "audit_required": true,
+      "cost_profile": {
         "type": "free"
       }
     }
   ],
-  "auth": {
-    "methods": ["none"]
-  },
   "policy": {
     "agent_allowed": true,
-    "human_confirmation_required": []
+    "human_confirmation_required": [
+      "payment.*",
+      "email.send",
+      "file.delete",
+      "public.publish"
+    ]
+  },
+  "audit": {
+    "trace_required_for_risk_levels": ["high", "critical"],
+    "user_visible_summary_required": true
   }
 }
